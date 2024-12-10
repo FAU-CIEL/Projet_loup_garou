@@ -25,7 +25,7 @@ namespace Projet_loup_garou
 
         public Joueur(string nom)
         {
-            Nom = nom;
+            this.Nom = nom;
         }
     }
 
@@ -86,6 +86,7 @@ namespace Projet_loup_garou
             var voyante = joueurs.FirstOrDefault(j => j.Role == Role.Voyante && j.Est_Vivant);
             if (voyante != null)
                 role_Voyante(voyante);
+            role_loup_garou();
         }
 
         private void Jour()
@@ -121,6 +122,18 @@ namespace Projet_loup_garou
             var joueurInspecte = joueurs.FirstOrDefault(j => j.Nom.Equals(nomInspecte, StringComparison.OrdinalIgnoreCase));
             if (joueurInspecte != null && joueurInspecte.Est_Vivant)
                 Console.WriteLine($"{voyante.Nom} a inspecte {joueurInspecte.Nom} et a decouvert qu'il est : {joueurInspecte.Role}.");
+        }
+
+        private void role_loup_garou()
+        {
+            Console.WriteLine("Les Loups-Garous vont choisir un joueur a eliminer : ");
+            var nonVicitme = Console.ReadLine();
+            var victimeNuit = joueurs.FirstOrDefault(j => j.Nom.Equals(nonVicitme, StringComparison.OrdinalIgnoreCase) && j.Est_Vivant);
+            if (victimeNuit != null)
+            {
+                victimeNuit.Est_Vivant = false;
+                eliminationNuit.Add(victimeNuit); // Ajouter à la liste des éliminations
+            }
         }
 
         private void role_Chasseur()
