@@ -85,7 +85,7 @@ namespace Projet_loup_garou
 
             var voyante = joueurs.FirstOrDefault(j => j.Role == Role.Voyante && j.Est_Vivant);
             if (voyante != null)
-                role_Voyante();
+                role_Voyante(voyante);
         }
 
         private void Jour()
@@ -114,7 +114,7 @@ namespace Projet_loup_garou
         }
 
 
-        private void role_Voyante()
+        private void role_Voyante(Joueur voyante)
         {
             Console.Write("La voyante va choisi un joueur a observer : ");
             var nomInspecte = Console.ReadLine();
