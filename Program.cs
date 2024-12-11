@@ -86,7 +86,10 @@ namespace Projet_loup_garou
             var voyante = joueurs.FirstOrDefault(j => j.Role == Role.Voyante && j.Est_Vivant);
             if (voyante != null)
                 role_Voyante(voyante);
-            role_loup_garou();
+            var loupGarou = joueurs.FirstOrDefault(j => j.Role == Role.LoupGarou && j.Est_Vivant);
+            if (loupGarou != null)
+                role_loup_garou();
+            affichageMort();
         }
 
         private void Jour()
@@ -148,6 +151,21 @@ namespace Projet_loup_garou
             }
             else
                 Console.WriteLine("Le chasseur a decider de ne pas eliminer de joueur");
+        }
+
+        private void affichageMort()
+        {
+            if (eliminationNuit.Any())
+            {
+                foreach (var joueur in eliminationNuit)
+                {
+                    Console.WriteLine($"- {joueur.Nom} a ete eliminer cette nuit, il etait {joueur.Role}.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Aucun elimination cette nuit.");
+            }
         }
     }
 
