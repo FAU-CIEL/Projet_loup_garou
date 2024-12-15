@@ -1,4 +1,5 @@
-﻿using System;
+using Projet_loup_garou;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,6 +7,12 @@ using System.Threading;
 
 namespace Projet_loup_garou
 {
+    public class Sorciere
+    {
+        public bool potion_vie { get; set; } = true;
+        public bool potion_mort { get; set; } = true;
+    }
+
     public enum Role
     {
         Villagois,
@@ -60,19 +67,19 @@ namespace Projet_loup_garou
             if (loupsGarous == vivants.Count) // Reste que des Loups-Garous
             {
                 Console.WriteLine("Les Loups-Garous ont gagné !");
-                Thread.Sleep(5000);
+                Thread.Sleep(1500);
                 return true;
             }
             else if (autres == vivants.Count) // Reste que les roles du village
             {
                 Console.WriteLine("Les Villagois ont gagné !");
-                Thread.Sleep(5000);
+                Thread.Sleep(1500);
                 return true;
             }
             else if (vivants.Count == 0) // Tout le monde est mort
             {
                 Console.WriteLine("Tout le monde est mort. Egaliter !");
-                Thread.Sleep(5000);
+                Thread.Sleep(1500);
                 return true;
             }
             return false; // La partie continue
@@ -86,9 +93,15 @@ namespace Projet_loup_garou
             var voyante = joueurs.FirstOrDefault(j => j.Role == Role.Voyante && j.Est_Vivant);
             if (voyante != null)
                 role_Voyante(voyante);
+
             var loupGarou = joueurs.FirstOrDefault(j => j.Role == Role.LoupGarou && j.Est_Vivant);
             if (loupGarou != null)
                 role_loup_garou();
+
+            var sorciere = joueurs.FirstOrDefault(j => j.Role == Role.Sorciere && j.Est_Vivant);
+            if (sorciere != null)
+                role_Sorciere(sorciere);
+
             affichageMort();
         }
 
@@ -130,12 +143,44 @@ namespace Projet_loup_garou
         private void role_loup_garou()
         {
             Console.WriteLine("Les Loups-Garous vont choisir un joueur a eliminer : ");
-            var nonVicitme = Console.ReadLine();
-            var victimeNuit = joueurs.FirstOrDefault(j => j.Nom.Equals(nonVicitme, StringComparison.OrdinalIgnoreCase) && j.Est_Vivant);
+            var nomVicitme = Console.ReadLine();
+            var victimeNuit = joueurs.FirstOrDefault(j => j.Nom.Equals(nomVicitme, StringComparison.OrdinalIgnoreCase) && j.Est_Vivant);
             if (victimeNuit != null)
             {
                 victimeNuit.Est_Vivant = false;
                 eliminationNuit.Add(victimeNuit); // Ajouter à la liste des éliminations
+            }
+        }
+
+        private void role_Sorciere(Joueur Sorciere)
+        {
+            Console.WriteLine("Sorciere, veut-tu :");
+            Console.WriteLine("- sauver le joueur mort (1)");
+            Console.WriteLine("- tuer un autre joueur (2)");
+            Console.WriteLine("- ne rien faire (3)");
+            var choix = Console.Read();
+
+            if (choix == '1')
+            {
+                Console.WriteLine("Daccord");
+                eliminationNuit.Last().Est_Vivant = true;
+                eliminationNuit.RemoveAt(eliminationNuit.Count - 1);
+                
+            }
+            else if (choix == '2')
+            {
+                Console.WriteLine("Quelle joueur voulez vous tuer : ");
+                var nomSorciere = Console.ReadLine();
+                var victimeSorciere = joueurs.FirstOrDefault(j => j.Nom.Equals(nomSorciere, StringComparison.OrdinalIgnoreCase) && j.Est_Vivant);
+                if (victimeSorciere != null)
+                {
+                    victimeSorciere.Est_Vivant = false;
+                    eliminationNuit.Add(victimeSorciere);
+                }
+            }
+            else if (choix == '3')
+            {
+                Console.WriteLine("Daccord");
             }
         }
 
@@ -216,3 +261,6 @@ namespace Projet_loup_garou
         }
     }
 }
+
+// Changer la class soricere pour les potions a usage unique 
+// regler bug du vote du village le jour (passe a la suite direct)
