@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace Projet_loup_garou
 {
-    public class Sorciere
+    public class sorciere
     {
         public bool potion_vie { get; set; } = true;
         public bool potion_mort { get; set; } = true;
@@ -28,6 +28,7 @@ namespace Projet_loup_garou
     {
         public string Nom { get; set; }
         public Role Role { get; set; }
+        public bool presque_mort { get; set; } = true;
         public bool Est_Vivant { get; set; } = true;
 
         public Joueur(string nom)
@@ -144,10 +145,10 @@ namespace Projet_loup_garou
         {
             Console.WriteLine("Les Loups-Garous vont choisir un joueur a eliminer : ");
             var nomVicitme = Console.ReadLine();
-            var victimeNuit = joueurs.FirstOrDefault(j => j.Nom.Equals(nomVicitme, StringComparison.OrdinalIgnoreCase) && j.Est_Vivant);
+            var victimeNuit = joueurs.FirstOrDefault(j => j.Nom.Equals(nomVicitme, StringComparison.OrdinalIgnoreCase) && j.Est_Vivant && j.presque_mort);
             if (victimeNuit != null)
             {
-                victimeNuit.Est_Vivant = false;
+                victimeNuit.presque_mort = false;
                 eliminationNuit.Add(victimeNuit); // Ajouter à la liste des éliminations
             }
         }
@@ -163,18 +164,18 @@ namespace Projet_loup_garou
             if (choix == '1')
             {
                 Console.WriteLine("Daccord");
-                eliminationNuit.Last().Est_Vivant = true;
+                eliminationNuit.Last().presque_mort = true;
                 eliminationNuit.RemoveAt(eliminationNuit.Count - 1);
                 
             }
             else if (choix == '2')
             {
                 Console.WriteLine("Quelle joueur voulez vous tuer : ");
-                var nomSorciere = Console.ReadLine();
-                var victimeSorciere = joueurs.FirstOrDefault(j => j.Nom.Equals(nomSorciere, StringComparison.OrdinalIgnoreCase) && j.Est_Vivant);
+                var nomVictime = Console.ReadLine();
+                var victimeSorciere = joueurs.FirstOrDefault(j => j.Nom.Equals(nomVictime, StringComparison.OrdinalIgnoreCase) && j.Est_Vivant && j.presque_mort);
                 if (victimeSorciere != null)
                 {
-                    victimeSorciere.Est_Vivant = false;
+                    victimeSorciere.presque_mort = false;
                     eliminationNuit.Add(victimeSorciere);
                 }
             }
@@ -188,7 +189,7 @@ namespace Projet_loup_garou
         {
             Console.Write("Le chasseur peut choisir un joueur a eliminer : ");
             var nomCible = Console.ReadLine();
-            var cible = joueurs.FirstOrDefault(j => j.Nom.Equals(nomCible, StringComparison.OrdinalIgnoreCase) && j.Est_Vivant);
+            var cible = joueurs.FirstOrDefault(j => j.Nom.Equals(nomCible, StringComparison.OrdinalIgnoreCase) && j.Est_Vivant && j.presque_mort);
             if (cible != null)
             {
                 cible.Est_Vivant = false;
@@ -205,6 +206,7 @@ namespace Projet_loup_garou
                 foreach (var joueur in eliminationNuit)
                 {
                     Console.WriteLine($"- {joueur.Nom} a ete eliminer cette nuit, il etait {joueur.Role}.");
+                    joueur.Est_Vivant = false;
                 }
             }
             else
