@@ -24,6 +24,7 @@ namespace Projet_loup_garou
         public Role Role { get; set; }
         public bool presque_mort { get; set; } = true;
         public bool Est_Vivant { get; set; } = true;
+        public bool Est_amoureux { get; set; } = false;
         public bool potion_vie { get; set; } = false;
         public bool potion_mort { get; set; } = false;
 
@@ -36,6 +37,7 @@ namespace Projet_loup_garou
     public class Jeu
     {
         private List<Joueur> joueurs;
+        private List<Joueur> amoureux = new List<Joueur>();
         private List<Joueur> eliminationNuit = new List<Joueur>();
 
         public Jeu(List<Joueur> joueurs)
@@ -46,6 +48,7 @@ namespace Projet_loup_garou
 
         public void Jouer()
         {
+            role_Cupidon();
             while (true)
             {
                 Nuit();
@@ -70,6 +73,12 @@ namespace Projet_loup_garou
             else if (autres == vivants.Count) // Reste que les roles du village
             {
                 Console.WriteLine("Les Villagois ont gagné !");
+                Thread.Sleep(1500);
+                return true;
+            }
+            else if (amoureux.All(a => a.Est_Vivant)  && vivants.Count  == amoureux.Count) // Reste que le couple
+            {
+                Console.WriteLine("Les amoureux ont gagné !");
                 Thread.Sleep(1500);
                 return true;
             }
@@ -127,6 +136,33 @@ namespace Projet_loup_garou
             }
         }
 
+        private void role_Cupidon()
+        {
+            var cupidon = joueurs.FirstOrDefault(j => j.Role == Role.Cupidon && j.Est_Vivant);
+            if (cupidon != null)
+            {
+                Console.WriteLine("Cupidon va choisir deux joueurs a mettre en couple.");
+
+                // Choisi le premier amoureux
+                Console.WriteLine("Premier joueur : ");
+                var nomAmoureux1 = Console.ReadLine();
+                var amoureux1 = joueurs.FirstOrDefault(j => j.Nom.Equals(nomAmoureux1, StringComparison.OrdinalIgnoreCase));
+
+                // choisi le deuxieme amoureux
+                Console.WriteLine("Deuxieme joueur : ");
+                var nomAmoureux2 = Console.ReadLine();
+                var amoureux2 = joueurs.FirstOrDefault(j => j.Nom.Equals(nomAmoureux2, StringComparison.OrdinalIgnoreCase));
+
+                if (amoureux1 != null && amoureux2 != null && amoureux1 != amoureux2) // vérifie que les deux amoureux sont differents et "présent"
+                {
+                    amoureux1.Est_amoureux = true;
+                    amoureux2.Est_amoureux = true;
+                    amoureux.Add(amoureux1);
+                    amoureux.Add(amoureux2);
+                    Console.WriteLine($"{amoureux1.Nom} et {amoureux2.Nom} sont mantenant amoureux.");
+                }
+            }
+        }
 
         private void role_Voyante(Joueur voyante)
         {
@@ -204,6 +240,14 @@ namespace Projet_loup_garou
                 foreach (var joueur in eliminationNuit)
                 {
                     Console.WriteLine($"- {joueur.Nom} a ete eliminer cette nuit, il etait {joueur.Role}.");
+                    foreach (var amoureuxMort in amoureux.Where(a => a.presque_mort).ToList())
+                    {
+                        foreach (var partenaire in amoureux.Where(a => a.Est_Vivant))
+                        {
+                            partenaire.Est_Vivant = false;
+                            Console.WriteLine($"- {partenaire.Nom} est mort par chagrin amoureux, il etait {partenaire.Role}.");
+                        }
+                    }
                     joueur.Est_Vivant = false;
                 }
             }
@@ -274,6 +318,6 @@ namespace Projet_loup_garou
         }
     }
 }
-
+// bug avec cupidon a regarder
 // regler bug où on peut pas choisir le joueur a tuer pour la sorciere
 // regler bug du vote du village le jour
