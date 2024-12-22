@@ -7,12 +7,6 @@ using System.Threading;
 
 namespace Projet_loup_garou
 {
-    public class sorciere
-    {
-        public bool potion_vie { get; set; } = true;
-        public bool potion_mort { get; set; } = true;
-    }
-
     public enum Role
     {
         Villagois,
@@ -30,6 +24,8 @@ namespace Projet_loup_garou
         public Role Role { get; set; }
         public bool presque_mort { get; set; } = true;
         public bool Est_Vivant { get; set; } = true;
+        public bool potion_vie { get; set; } = false;
+        public bool potion_mort { get; set; } = false;
 
         public Joueur(string nom)
         {
@@ -121,7 +117,7 @@ namespace Projet_loup_garou
             Console.Write("Choisissez un joueur a eliminer : ");
             var nomJoueurAEliminer = Console.ReadLine();
             var victimeJour = joueurs.FirstOrDefault(j => j.Nom.Equals(nomJoueurAEliminer, StringComparison.OrdinalIgnoreCase) && j.Est_Vivant);
-            
+
             if (victimeJour != null)
             {
                 victimeJour.Est_Vivant = false;
@@ -161,14 +157,15 @@ namespace Projet_loup_garou
             Console.WriteLine("- ne rien faire (3)");
             var choix = Console.Read();
 
-            if (choix == '1')
+            if (choix == '1' && eliminationNuit.Count != 0 && Sorciere.potion_vie == true)
             {
                 Console.WriteLine("Daccord");
                 eliminationNuit.Last().presque_mort = true;
                 eliminationNuit.RemoveAt(eliminationNuit.Count - 1);
-                
+                Sorciere.potion_vie = false;
+
             }
-            else if (choix == '2')
+            else if (choix == '2' && Sorciere.potion_mort == true)
             {
                 Console.WriteLine("Quelle joueur voulez vous tuer : ");
                 var nomVictime = Console.ReadLine();
@@ -178,8 +175,9 @@ namespace Projet_loup_garou
                     victimeSorciere.presque_mort = false;
                     eliminationNuit.Add(victimeSorciere);
                 }
+                Sorciere.potion_mort = false;
             }
-            else if (choix == '3')
+            else
             {
                 Console.WriteLine("Daccord");
             }
@@ -252,10 +250,23 @@ namespace Projet_loup_garou
             Random rand = new Random();
             roles = roles.OrderBy(x => rand.Next()).ToList();
 
-            // Créer les joueurs avec des roles aléatoires
+            // Créer les joueurs sans les roles
             var joueurs = new List<Joueur>();
             for (int i = 0; i < noms.Count; i++)
-                joueurs.Add(new Joueur(noms[i]) { Role = roles[i] });
+                joueurs.Add(new Joueur(noms[i]));
+
+            // Assigne les Roles aleatoirement
+            for (int i = 0; i < joueurs.Count; i++)
+            {
+                joueurs[i].Role = roles[i];
+
+                // si sorciere, alors potion mort et vit deviennent vrai
+                if (joueurs[i].Role == Role.Sorciere)
+                {
+                    joueurs[i].potion_vie = true;
+                    joueurs[i].potion_mort = true;
+                }
+            }
 
             // Initialiser et démarrer le jeu
             Jeu jeu = new Jeu(joueurs);
@@ -264,5 +275,5 @@ namespace Projet_loup_garou
     }
 }
 
-// Changer la class soricere pour les potions a usage unique 
-// regler bug du vote du village le jour (passe a la suite direct)
+// regler bug où on peut pas choisir le joueur a tuer pour la sorciere
+// regler bug du vote du village le jour
