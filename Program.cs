@@ -253,7 +253,7 @@ namespace Projet_loup_garou
             }
             else
             {
-                Console.WriteLine("Aucun elimination cette nuit.");
+                Console.WriteLine("Aucune personne n'a ete elimine cette nuit.");
             }
         }
     }
@@ -269,7 +269,7 @@ namespace Projet_loup_garou
                 Console.Write("Nombre de joueurs : ");
                 nombreJoueurs = int.Parse(Console.ReadLine());
                 if (nombreJoueurs < 5)
-                    Console.WriteLine("veuiller choisir plus de personne !");
+                    Console.WriteLine("veuillez choisir plus de personne !");
             } while (nombreJoueurs < 5);
 
             var noms = new List<string>();
