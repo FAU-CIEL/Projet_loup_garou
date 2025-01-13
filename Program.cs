@@ -98,7 +98,7 @@ namespace Projet_loup_garou
 
             var voyante = joueurs.FirstOrDefault(j => j.Role == Role.Voyante && j.Est_Vivant);
             if (voyante != null)
-                role_Voyante(voyante);
+                role_Voyante();
 
             var loupGarou = joueurs.FirstOrDefault(j => j.Role == Role.LoupGarou && j.Est_Vivant);
             if (loupGarou != null)
@@ -164,13 +164,13 @@ namespace Projet_loup_garou
             }
         }
 
-        private void role_Voyante(Joueur voyante)
+        private void role_Voyante()
         {
             Console.Write("La voyante va choisir un joueur a observer : ");
             var nomInspecte = Console.ReadLine();
             var joueurInspecte = joueurs.FirstOrDefault(j => j.Nom.Equals(nomInspecte, StringComparison.OrdinalIgnoreCase));
             if (joueurInspecte != null && joueurInspecte.Est_Vivant)
-                Console.WriteLine($"{voyante.Nom} a inspecte {joueurInspecte.Nom} et a decouvert qu'il est : {joueurInspecte.Role}.");
+                Console.WriteLine($"La voyante a inspecte {joueurInspecte.Nom} et a decouvert qu'il est : {joueurInspecte.Role}.");
         }
 
         private void role_loup_garou()
