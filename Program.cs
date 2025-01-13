@@ -166,7 +166,7 @@ namespace Projet_loup_garou
 
         private void role_Voyante(Joueur voyante)
         {
-            Console.Write("La voyante va choisi un joueur a observer : ");
+            Console.Write("La voyante va choisir un joueur a observer : ");
             var nomInspecte = Console.ReadLine();
             var joueurInspecte = joueurs.FirstOrDefault(j => j.Nom.Equals(nomInspecte, StringComparison.OrdinalIgnoreCase));
             if (joueurInspecte != null && joueurInspecte.Est_Vivant)
