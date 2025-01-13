@@ -230,7 +230,7 @@ namespace Projet_loup_garou
                 Console.WriteLine($"Le chasseur a elimine {cible.Nom}, il etait {cible.Role}.");
             }
             else
-                Console.WriteLine("Le chasseur a decider de ne pas eliminer de joueur");
+                Console.WriteLine("Le chasseur n'a pas designer de cible");
         }
 
         private void affichageMort()
