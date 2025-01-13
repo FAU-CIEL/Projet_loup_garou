@@ -195,7 +195,7 @@ namespace Projet_loup_garou
 
             if (choix == '1' && eliminationNuit.Count != 0 && Sorciere.potion_vie == true)
             {
-                Console.WriteLine("Daccord");
+                Console.WriteLine("D'accord");
                 eliminationNuit.Last().presque_mort = true;
                 eliminationNuit.RemoveAt(eliminationNuit.Count - 1);
                 Sorciere.potion_vie = false;
@@ -203,7 +203,7 @@ namespace Projet_loup_garou
             }
             else if (choix == '2' && Sorciere.potion_mort == true)
             {
-                Console.WriteLine("Quelle joueur voulez vous tuer : ");
+                Console.WriteLine("Qu'elle joueur voulez vous tuer : ");
                 var nomVictime = Console.ReadLine();
                 var victimeSorciere = joueurs.FirstOrDefault(j => j.Nom.Equals(nomVictime, StringComparison.OrdinalIgnoreCase) && j.Est_Vivant && j.presque_mort);
                 if (victimeSorciere != null)
@@ -215,7 +215,7 @@ namespace Projet_loup_garou
             }
             else
             {
-                Console.WriteLine("Daccord");
+                Console.WriteLine("D'accord");
             }
         }
 
