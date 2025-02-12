@@ -324,5 +324,3 @@ namespace Projet_loup_garou
         }
     }
 }
-// regler bug où on peut pas choisir le joueur a tuer pour la sorciere
-//regler affichage mort
