@@ -22,7 +22,7 @@ namespace Projet_loup_garou
     {
         public string Nom { get; set; }
         public Role Role { get; set; }
-        public bool presque_mort { get; set; } = true;
+        public bool presque_mort { get; set; } = false;
         public bool Est_Vivant { get; set; } = true;
         public bool Est_amoureux { get; set; } = false;
         public bool potion_vie { get; set; } = false;
@@ -76,7 +76,7 @@ namespace Projet_loup_garou
                 Thread.Sleep(1500);
                 return true;
             }
-            else if (amoureux.All(a => a.Est_Vivant)  && vivants.Count  == amoureux.Count) // Reste que le couple
+            else if (amoureux.All(a => a.Est_Vivant) && vivants.Count == amoureux.Count) // Reste que le couple
             {
                 Console.WriteLine("Les amoureux ont gagné !");
                 Thread.Sleep(1500);
@@ -180,7 +180,7 @@ namespace Projet_loup_garou
             var victimeNuit = joueurs.FirstOrDefault(j => j.Nom.Equals(nomVicitme, StringComparison.OrdinalIgnoreCase) && j.Est_Vivant && j.presque_mort);
             if (victimeNuit != null)
             {
-                victimeNuit.presque_mort = false;
+                victimeNuit.presque_mort = true;
                 eliminationNuit.Add(victimeNuit); // Ajouter à la liste des éliminations
             }
         }
@@ -196,7 +196,7 @@ namespace Projet_loup_garou
             if (choix == '1' && eliminationNuit.Count != 0 && Sorciere.potion_vie == true)
             {
                 Console.WriteLine("D'accord");
-                eliminationNuit.Last().presque_mort = true;
+                eliminationNuit.Last().presque_mort = false;
                 eliminationNuit.RemoveAt(eliminationNuit.Count - 1);
                 Sorciere.potion_vie = false;
 
@@ -208,7 +208,7 @@ namespace Projet_loup_garou
                 var victimeSorciere = joueurs.FirstOrDefault(j => j.Nom.Equals(nomVictime, StringComparison.OrdinalIgnoreCase) && j.Est_Vivant && j.presque_mort);
                 if (victimeSorciere != null)
                 {
-                    victimeSorciere.presque_mort = false;
+                    victimeSorciere.presque_mort = true;
                     eliminationNuit.Add(victimeSorciere);
                 }
                 Sorciere.potion_mort = false;
@@ -232,28 +232,56 @@ namespace Projet_loup_garou
             else
                 Console.WriteLine("Le chasseur n'a pas designer de cible");
         }
-
+        /*
+                private void affichageMort()
+                {
+                    if (eliminationNuit.Any())
+                    {
+                        foreach (var joueur in eliminationNuit)
+                        {
+                            Console.WriteLine($"- {joueur.Nom} a ete eliminer cette nuit, il etait {joueur.Role}.");
+                            foreach (var amoureuxMort in amoureux.Where(a => a.presque_mort).ToList())
+                            {
+                                foreach (var partenaire in amoureux.Where(a => a.Est_Vivant))
+                                {
+                                    partenaire.Est_Vivant = false;
+                                    Console.WriteLine($"- {partenaire.Nom} est mort par chagrin amoureux, il etait {partenaire.Role}.");
+                                }
+                            }
+                            joueur.Est_Vivant = false;
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Aucune personne n'a ete elimine cette nuit.");
+                    }
+                }
+            }
+        */
         private void affichageMort()
         {
             if (eliminationNuit.Any())
             {
                 foreach (var joueur in eliminationNuit)
                 {
-                    Console.WriteLine($"- {joueur.Nom} a ete eliminer cette nuit, il etait {joueur.Role}.");
-                    foreach (var amoureuxMort in amoureux.Where(a => a.presque_mort).ToList())
+                    Console.WriteLine($"- {joueur.Nom} a ete elimine cette nuit, il etait {joueur.Role}.");
+                    joueur.Est_Vivant = false; // Marque le joueur comme mort
+                    // verifier si le joueur mort fait parti du couple
+                    if (joueur.Est_amoureux)
                     {
-                        foreach (var partenaire in amoureux.Where(a => a.Est_Vivant))
+                        // Trouve le partenaire amoureux
+                        var partenaire = joueurs.FirstOrDefault(j => j.Est_amoureux && j.Est_Vivant && j != joueur);
+                        if (partenaire != null)
                         {
-                            partenaire.Est_Vivant = false;
+                            partenaire.Est_Vivant = false; // Marque le partenaire comme mort
                             Console.WriteLine($"- {partenaire.Nom} est mort par chagrin amoureux, il etait {partenaire.Role}.");
                         }
                     }
-                    joueur.Est_Vivant = false;
                 }
             }
             else
             {
-                Console.WriteLine("Aucune personne n'a ete elimine cette nuit.");
+                Console.WriteLine("Aucune personne n'a ete eliminee cette nuit.");
             }
         }
     }
@@ -321,3 +349,4 @@ namespace Projet_loup_garou
 // bug avec cupidon a regarder
 // regler bug où on peut pas choisir le joueur a tuer pour la sorciere
 // regler bug du vote du village le jour
+//regler affichage mort
