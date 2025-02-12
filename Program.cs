@@ -196,7 +196,7 @@ namespace Projet_loup_garou
             Console.WriteLine("- ne rien faire (3)");
             var choix = Console.ReadLine();
 
-            if (choix == '1' && eliminationNuit.Count != 0 && Sorciere.potion_vie)
+            if (choix == "1" && eliminationNuit.Count != 0 && Sorciere.potion_vie)
             {
                 Console.WriteLine("D'accord");
                 eliminationNuit.Last().presque_mort = false;
@@ -204,7 +204,7 @@ namespace Projet_loup_garou
                 Sorciere.potion_vie = false;
 
             }
-            else if (choix == '2' && Sorciere.potion_mort)
+            else if (choix == "2" && Sorciere.potion_mort)
             {
                 Console.WriteLine("Qu'elle joueur voulez vous tuer : ");
                 var nomVictime = Console.ReadLine();
@@ -349,7 +349,5 @@ namespace Projet_loup_garou
         }
     }
 }
-// bug avec cupidon a regarder
 // regler bug où on peut pas choisir le joueur a tuer pour la sorciere
-// regler bug du vote du village le jour
 //regler affichage mort
