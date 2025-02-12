@@ -62,7 +62,6 @@ namespace Projet_loup_garou
         {
             var vivants = joueurs.Where(j => j.Est_Vivant).ToList();
             var loupsGarous = vivants.Count(j => j.Role == Role.LoupGarou);
-            var autres = vivants.Count(j => j.Role != Role.LoupGarou);
 
             if (loupsGarous == vivants.Count) // Reste que des Loups-Garous
             {
@@ -70,7 +69,7 @@ namespace Projet_loup_garou
                 Thread.Sleep(1500);
                 return true;
             }
-            else if (autres == vivants.Count) // Reste que les roles du village
+            else if (loupsGarous == 0) // Reste que les roles du village
             {
                 Console.WriteLine("Les Villagois ont gagné !");
                 Thread.Sleep(1500);
@@ -134,6 +133,10 @@ namespace Projet_loup_garou
                 if (victimeJour.Role == Role.Chasseur)
                     role_Chasseur();
             }
+            if (victimeJour == null)
+            {
+                Console.WriteLine("Personne n'a ete designer par le village.");
+            }
         }
 
         private void role_Cupidon()
@@ -146,12 +149,12 @@ namespace Projet_loup_garou
                 // Choisi le premier amoureux
                 Console.WriteLine("Premier joueur : ");
                 var nomAmoureux1 = Console.ReadLine();
-                var amoureux1 = joueurs.FirstOrDefault(j => j.Nom.Equals(nomAmoureux1, StringComparison.OrdinalIgnoreCase));
+                var amoureux1 = joueurs.FirstOrDefault(j => j.Nom.Equals(nomAmoureux1, StringComparison.OrdinalIgnoreCase) && j.Est_Vivant);
 
                 // choisi le deuxieme amoureux
                 Console.WriteLine("Deuxieme joueur : ");
                 var nomAmoureux2 = Console.ReadLine();
-                var amoureux2 = joueurs.FirstOrDefault(j => j.Nom.Equals(nomAmoureux2, StringComparison.OrdinalIgnoreCase));
+                var amoureux2 = joueurs.FirstOrDefault(j => j.Nom.Equals(nomAmoureux2, StringComparison.OrdinalIgnoreCase) && j.Est_Vivant);
 
                 if (amoureux1 != null && amoureux2 != null && amoureux1 != amoureux2) // vérifie que les deux amoureux sont differents et "présent"
                 {
@@ -177,7 +180,7 @@ namespace Projet_loup_garou
         {
             Console.WriteLine("Les Loups-Garous vont choisir un joueur a eliminer : ");
             var nomVicitme = Console.ReadLine();
-            var victimeNuit = joueurs.FirstOrDefault(j => j.Nom.Equals(nomVicitme, StringComparison.OrdinalIgnoreCase) && j.Est_Vivant && j.presque_mort);
+            var victimeNuit = joueurs.FirstOrDefault(j => j.Nom.Equals(nomVicitme, StringComparison.OrdinalIgnoreCase) && j.Est_Vivant);
             if (victimeNuit != null)
             {
                 victimeNuit.presque_mort = true;
@@ -191,9 +194,9 @@ namespace Projet_loup_garou
             Console.WriteLine("- sauver le joueur mort (1)");
             Console.WriteLine("- tuer un autre joueur (2)");
             Console.WriteLine("- ne rien faire (3)");
-            var choix = Console.Read();
+            var choix = Console.ReadLine();
 
-            if (choix == '1' && eliminationNuit.Count != 0 && Sorciere.potion_vie == true)
+            if (choix == '1' && eliminationNuit.Count != 0 && Sorciere.potion_vie)
             {
                 Console.WriteLine("D'accord");
                 eliminationNuit.Last().presque_mort = false;
@@ -201,7 +204,7 @@ namespace Projet_loup_garou
                 Sorciere.potion_vie = false;
 
             }
-            else if (choix == '2' && Sorciere.potion_mort == true)
+            else if (choix == '2' && Sorciere.potion_mort)
             {
                 Console.WriteLine("Qu'elle joueur voulez vous tuer : ");
                 var nomVictime = Console.ReadLine();
@@ -264,8 +267,8 @@ namespace Projet_loup_garou
             {
                 foreach (var joueur in eliminationNuit)
                 {
-                    Console.WriteLine($"- {joueur.Nom} a ete elimine cette nuit, il etait {joueur.Role}.");
                     joueur.Est_Vivant = false; // Marque le joueur comme mort
+                    Console.WriteLine($"- {joueur.Nom} a ete elimine cette nuit, il etait {joueur.Role}.");
                     // verifier si le joueur mort fait parti du couple
                     if (joueur.Est_amoureux)
                     {
