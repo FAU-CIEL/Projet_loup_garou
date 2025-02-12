@@ -296,6 +296,25 @@ namespace Projet_loup_garou
                 Role.Chasseur,
             };
 
+            // Ajoute les roles de villagois et de loup-garou suplementaire si le nombre de joueur est superieur au nombre de roles
+            if (nombreJoueurs > roles.Count)
+            {
+                int rolesManquants = nombreJoueurs - roles.Count;
+                Random roleAleatoire = new Random();
+
+                for (int i = 0; i < rolesManquants; i++)
+                {
+                    if (roleAleatoire.Next(2) == 0) // 0 pour villagois et 1 pour loup garou
+                    {
+                        roles.Add(Role.Villagois);
+                    }
+                    else
+                    {
+                        roles.Add(Role.LoupGarou);
+                    }
+                }
+            }
+
             // Mélanger les roles
             Random rand = new Random();
             roles = roles.OrderBy(x => rand.Next()).ToList();
