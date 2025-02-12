@@ -208,7 +208,7 @@ namespace Projet_loup_garou
             {
                 Console.WriteLine("Qu'elle joueur voulez vous tuer : ");
                 var nomVictime = Console.ReadLine();
-                var victimeSorciere = joueurs.FirstOrDefault(j => j.Nom.Equals(nomVictime, StringComparison.OrdinalIgnoreCase) && j.Est_Vivant && j.presque_mort);
+                var victimeSorciere = joueurs.FirstOrDefault(j => j.Nom.Equals(nomVictime, StringComparison.OrdinalIgnoreCase) && j.Est_Vivant && j.presque_mort == false);
                 if (victimeSorciere != null)
                 {
                     victimeSorciere.presque_mort = true;
@@ -235,32 +235,7 @@ namespace Projet_loup_garou
             else
                 Console.WriteLine("Le chasseur n'a pas designer de cible");
         }
-        /*
-                private void affichageMort()
-                {
-                    if (eliminationNuit.Any())
-                    {
-                        foreach (var joueur in eliminationNuit)
-                        {
-                            Console.WriteLine($"- {joueur.Nom} a ete eliminer cette nuit, il etait {joueur.Role}.");
-                            foreach (var amoureuxMort in amoureux.Where(a => a.presque_mort).ToList())
-                            {
-                                foreach (var partenaire in amoureux.Where(a => a.Est_Vivant))
-                                {
-                                    partenaire.Est_Vivant = false;
-                                    Console.WriteLine($"- {partenaire.Nom} est mort par chagrin amoureux, il etait {partenaire.Role}.");
-                                }
-                            }
-                            joueur.Est_Vivant = false;
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine("Aucune personne n'a ete elimine cette nuit.");
-                    }
-                }
-            }
-        */
+
         private void affichageMort()
         {
             if (eliminationNuit.Any())
