@@ -71,7 +71,7 @@ namespace Projet_loup_garou
             }
             else if (loupsGarous == 0) // Reste que les roles du village
             {
-                Console.WriteLine("Les Villagois ont gagné !");
+                Console.WriteLine("Les Villageois ont gagné !");
                 Thread.Sleep(1500);
                 return true;
             }
@@ -83,7 +83,7 @@ namespace Projet_loup_garou
             }
             else if (vivants.Count == 0) // Tout le monde est mort
             {
-                Console.WriteLine("Tout le monde est mort. Egaliter !");
+                Console.WriteLine("Tout le monde est mort. Egalité !");
                 Thread.Sleep(1500);
                 return true;
             }
@@ -92,7 +92,7 @@ namespace Projet_loup_garou
 
         private void Nuit()
         {
-            Console.WriteLine("Cest la nuit.");
+            Console.WriteLine("C'est la nuit.");
             eliminationNuit.Clear(); // Réinitialiser la liste des éliminations
 
             var voyante = joueurs.FirstOrDefault(j => j.Role == Role.Voyante && j.Est_Vivant);
@@ -129,13 +129,13 @@ namespace Projet_loup_garou
             if (victimeJour != null)
             {
                 victimeJour.Est_Vivant = false;
-                Console.WriteLine($"{victimeJour.Nom} a ete eliminer par le village, il etait {victimeJour.Role}.");
+                Console.WriteLine($"{victimeJour.Nom} a été eliminé par le village, il etait {victimeJour.Role}.");
                 if (victimeJour.Role == Role.Chasseur)
                     role_Chasseur();
             }
             if (victimeJour == null)
             {
-                Console.WriteLine("Personne n'a ete designer par le village.");
+                Console.WriteLine("Personne n'a été designé par le village.");
             }
         }
 
@@ -162,7 +162,7 @@ namespace Projet_loup_garou
                     amoureux2.Est_amoureux = true;
                     amoureux.Add(amoureux1);
                     amoureux.Add(amoureux2);
-                    Console.WriteLine($"{amoureux1.Nom} et {amoureux2.Nom} sont mantenant amoureux.");
+                    Console.WriteLine($"{amoureux1.Nom} et {amoureux2.Nom} sont maintenant amoureux.");
                 }
             }
         }
@@ -173,7 +173,7 @@ namespace Projet_loup_garou
             var nomInspecte = Console.ReadLine();
             var joueurInspecte = joueurs.FirstOrDefault(j => j.Nom.Equals(nomInspecte, StringComparison.OrdinalIgnoreCase));
             if (joueurInspecte != null && joueurInspecte.Est_Vivant)
-                Console.WriteLine($"La voyante a inspecte {joueurInspecte.Nom} et a decouvert qu'il est : {joueurInspecte.Role}.");
+                Console.WriteLine($"La voyante a inspecté {joueurInspecte.Nom} et a decouvert qu'il est : {joueurInspecte.Role}.");
         }
 
         private void role_loup_garou()
@@ -230,10 +230,10 @@ namespace Projet_loup_garou
             if (cible != null)
             {
                 cible.Est_Vivant = false;
-                Console.WriteLine($"Le chasseur a elimine {cible.Nom}, il etait {cible.Role}.");
+                Console.WriteLine($"Le chasseur a éliminé {cible.Nom}, il etait {cible.Role}.");
             }
             else
-                Console.WriteLine("Le chasseur n'a pas designer de cible");
+                Console.WriteLine("Le chasseur n'a pas designé de cible");
         }
 
         private void affichageMort()
@@ -243,7 +243,7 @@ namespace Projet_loup_garou
                 foreach (var joueur in eliminationNuit)
                 {
                     joueur.Est_Vivant = false; // Marque le joueur comme mort
-                    Console.WriteLine($"- {joueur.Nom} a ete elimine cette nuit, il etait {joueur.Role}.");
+                    Console.WriteLine($"- {joueur.Nom} a été éliminé cette nuit, il était {joueur.Role}.");
                     // verifier si le joueur mort fait parti du couple
                     if (joueur.Est_amoureux)
                     {
@@ -252,14 +252,14 @@ namespace Projet_loup_garou
                         if (partenaire != null)
                         {
                             partenaire.Est_Vivant = false; // Marque le partenaire comme mort
-                            Console.WriteLine($"- {partenaire.Nom} est mort par chagrin amoureux, il etait {partenaire.Role}.");
+                            Console.WriteLine($"- Par chargrin amoureux ,{partenaire.Nom} qui était {partenaire.Role} a décidé de mettre fin à ses jours.");
                         }
                     }
                 }
             }
             else
             {
-                Console.WriteLine("Aucune personne n'a ete eliminee cette nuit.");
+                Console.WriteLine("Aucune personne n'a été eliminé cette nuit.");
             }
         }
     }
@@ -298,7 +298,7 @@ namespace Projet_loup_garou
 
             // Calcule le nombre de villagois et de loup-garous
             int nombreLoupGarous = Math.Max(1, nombreJoueurs / 4); // 4 villagois = 1 loup
-            int nombreVillagois = nombreJoueurs - nombreLoupGarous;
+            int nombreVillagois = nombreJoueurs - (nombreLoupGarous + roles.Count());
 
             // ajoute role loup-garou
             for (int i = 0; i<nombreLoupGarous; i++)
