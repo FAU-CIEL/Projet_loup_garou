@@ -296,6 +296,18 @@ namespace Projet_loup_garou
                 Role.Chasseur,
             };
 
+            // Calcule le nombre de villagois et de loup-garous
+            int nombreLoupGarous = Math.Max(1, nombreJoueurs / 4); // 4 villagois = 1 loup
+            int nombreVillagois = nombreJoueurs - nombreLoupGarous;
+
+            // ajoute role loup-garou
+            for (int i = 0; i<nombreLoupGarous; i++)
+                roles.Add(Role.LoupGarou);
+            
+            // ajoute role villagois
+            for (int i = 0; i<nombreVillagois; i++)
+                roles.Add(Role.Villagois);
+            /*
             // Ajoute les roles de villagois et de loup-garou suplementaire si le nombre de joueur est superieur au nombre de roles
             if (nombreJoueurs > roles.Count)
             {
@@ -313,7 +325,7 @@ namespace Projet_loup_garou
                         roles.Add(Role.LoupGarou);
                     }
                 }
-            }
+            }*/
 
             // Mélanger les roles
             Random rand = new Random();
