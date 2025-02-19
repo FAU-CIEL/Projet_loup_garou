@@ -100,6 +100,10 @@ namespace Projet_loup_garou
             if (voyante != null)
                 role_Voyante();
 
+            var garde = joueurs.FirstOrDefault(j => j.Role == Role.Garde && j.Est_Vivant);
+            if (garde != null)
+                role_Garde();
+
             var loupGarou = joueurs.FirstOrDefault(j => j.Role == Role.LoupGarou && j.Est_Vivant);
             if (loupGarou != null)
                 role_loup_garou();
@@ -129,10 +133,10 @@ namespace Projet_loup_garou
 
             if (victimeJour != null)
             {
-                victimeJour.Est_Vivant = false;
-                Console.WriteLine($"{victimeJour.Nom} a été eliminé par le village, il etait {victimeJour.Role}.");
+                eliminationNuit.Add(victimeJour);
                 if (victimeJour.Role == Role.Chasseur)
                     role_Chasseur();
+                affichageMort();
             }
             if (victimeJour == null)
             {
@@ -299,8 +303,8 @@ namespace Projet_loup_garou
 
             var roles = new List<Role>
             {
-                Role.Villagois,
-                Role.LoupGarou,
+                //Role.Villagois,
+                //Role.LoupGarou,
                 Role.Cupidon,
                 Role.Voyante,
                 Role.Garde,
@@ -319,25 +323,6 @@ namespace Projet_loup_garou
             // ajoute role villagois
             for (int i = 0; i<nombreVillagois; i++)
                 roles.Add(Role.Villagois);
-            /*
-            // Ajoute les roles de villagois et de loup-garou suplementaire si le nombre de joueur est superieur au nombre de roles
-            if (nombreJoueurs > roles.Count)
-            {
-                int rolesManquants = nombreJoueurs - roles.Count;
-                Random roleAleatoire = new Random();
-
-                for (int i = 0; i < rolesManquants; i++)
-                {
-                    if (roleAleatoire.Next(2) == 0) // 0 pour villagois et 1 pour loup garou
-                    {
-                        roles.Add(Role.Villagois);
-                    }
-                    else
-                    {
-                        roles.Add(Role.LoupGarou);
-                    }
-                }
-            }*/
 
             // Mélanger les roles
             Random rand = new Random();
