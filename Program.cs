@@ -15,7 +15,7 @@ namespace Projet_loup_garou
         Sorciere,
         Chasseur,
         Cupidon,
-        Petite_Fille,
+        Garde,
     }
 
     public class Joueur
@@ -27,6 +27,7 @@ namespace Projet_loup_garou
         public bool Est_amoureux { get; set; } = false;
         public bool potion_vie { get; set; } = false;
         public bool potion_mort { get; set; } = false;
+        public bool proteger { get; set; } = false;
 
         public Joueur(string nom)
         {
@@ -176,11 +177,20 @@ namespace Projet_loup_garou
                 Console.WriteLine($"La voyante a inspecté {joueurInspecte.Nom} et a decouvert qu'il est : {joueurInspecte.Role}.");
         }
 
+        private void role_Garde()
+        {
+            Console.WriteLine("Le garde va proteger quelqu'un : ");
+            var nomProteger = Console.ReadLine();
+            var joueurProteger = joueurs.FirstOrDefault(j => j.Nom.Equals(nomProteger, StringComparison.OrdinalIgnoreCase));
+            if (joueurProteger != null && joueurProteger.Est_Vivant)
+                joueurProteger.proteger = true;
+        }
+
         private void role_loup_garou()
         {
             Console.WriteLine("Les Loups-Garous vont choisir un joueur a eliminer : ");
             var nomVicitme = Console.ReadLine();
-            var victimeNuit = joueurs.FirstOrDefault(j => j.Nom.Equals(nomVicitme, StringComparison.OrdinalIgnoreCase) && j.Est_Vivant);
+            var victimeNuit = joueurs.FirstOrDefault(j => j.Nom.Equals(nomVicitme, StringComparison.OrdinalIgnoreCase) && j.Est_Vivant && j.proteger == false);
             if (victimeNuit != null)
             {
                 victimeNuit.presque_mort = true;
@@ -226,7 +236,7 @@ namespace Projet_loup_garou
         {
             Console.Write("Le chasseur peut choisir un joueur a eliminer : ");
             var nomCible = Console.ReadLine();
-            var cible = joueurs.FirstOrDefault(j => j.Nom.Equals(nomCible, StringComparison.OrdinalIgnoreCase) && j.Est_Vivant && j.presque_mort);
+            var cible = joueurs.FirstOrDefault(j => j.Nom.Equals(nomCible, StringComparison.OrdinalIgnoreCase) && j.Est_Vivant);
             if (cible != null)
             {
                 cible.Est_Vivant = false;
@@ -261,6 +271,8 @@ namespace Projet_loup_garou
             {
                 Console.WriteLine("Aucune personne n'a été eliminé cette nuit.");
             }
+            foreach (var joueur in joueurs.Where(j => j.proteger))
+                joueur.proteger = false;
         }
     }
 
@@ -291,7 +303,7 @@ namespace Projet_loup_garou
                 Role.LoupGarou,
                 Role.Cupidon,
                 Role.Voyante,
-                Role.Petite_Fille,
+                Role.Garde,
                 Role.Sorciere,
                 Role.Chasseur,
             };
