@@ -71,3 +71,82 @@ public class Jeu
         if (cupidon != null)
         {
             Console.WriteLine("Cupidon va choisir
+
+
+//
+
+using Projet_loup_garou;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading;
+
+namespace Projet_loup_garou
+{
+    public class Chat
+    {
+        private List<string> messages = new List<string>();
+        private bool isChatActive = true;
+
+        public void StartChat()
+        {
+            Thread chatThread = new Thread(() =>
+            {
+                while (isChatActive)
+                {
+                    string message = Console.ReadLine();
+                    if (message.Equals("exit", StringComparison.OrdinalIgnoreCase))
+                    {
+                        isChatActive = false;
+                    }
+                    else
+                    {
+                        messages.Add(message);
+                        Console.WriteLine($"[Chat] {message}");
+                    }
+                }
+            });
+            chatThread.Start();
+        }
+
+        public void StopChat()
+        {
+            isChatActive = false;
+        }
+    }
+
+    // ... (le reste de votre code)
+}
+
+private void Jour()
+{
+    Console.WriteLine("C'est le jour. Les joueurs discutent et votent pour éliminer un joueur.");
+
+    // Démarrer le chat
+    Chat chat = new Chat();
+    chat.StartChat();
+
+    // Afficher les joueurs vivants
+    Console.WriteLine("Joueurs vivants :");
+    foreach (var joueur in joueurs.Where(j => j.Est_Vivant))
+        Console.WriteLine($"- {joueur.Nom} ({joueur.Role})");
+
+    //  Voter pour éliminer un joueur
+    Console.Write("Choisissez un joueur a eliminer : ");
+    var nomJoueurAEliminer = Console.ReadLine();
+    var victimeJour = joueurs.FirstOrDefault(j => j.Nom.Equals(nomJoueurAEliminer, StringComparison.OrdinalIgnoreCase) && j.Est_Vivant);
+
+    if (victimeJour != null)
+    {
+        eliminationNuit.Add(victimeJour);
+        if (victimeJour.Role == Role.Chasseur)
+            role_Chasseur();
+        affichageMort();
+    }
+    if (victimeJour == null)
+        Console.WriteLine("Personne n'a été designé par le village.");
+
+    // Arrêter le chat à la fin de la phase de jour
+    chat.StopChat();
+}
