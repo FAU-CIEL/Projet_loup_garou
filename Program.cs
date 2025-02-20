@@ -128,6 +128,7 @@ namespace Projet_loup_garou
         private void Jour()
         {
             Console.WriteLine("C'est le jour. Les joueurs discutent et votent pour éliminer un joueur.");
+            eliminationNuit.Clear();
 
             // Afficher les joueurs vivants
             Console.WriteLine("Joueurs vivants :");
@@ -222,7 +223,6 @@ namespace Projet_loup_garou
                 eliminationNuit.Last().presque_mort = false;
                 eliminationNuit.RemoveAt(eliminationNuit.Count - 1);
                 Sorciere.potion_vie = false;
-
             }
             else if (choix == "2" && Sorciere.potion_mort)
             {
