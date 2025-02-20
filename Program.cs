@@ -233,8 +233,8 @@ namespace Projet_loup_garou
                 {
                     victimeSorciere.presque_mort = true;
                     eliminationNuit.Add(victimeSorciere);
+                    Sorciere.potion_mort = false;
                 }
-                Sorciere.potion_mort = false;
             }
             else
             {
