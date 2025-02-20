@@ -28,6 +28,7 @@ namespace Projet_loup_garou
         public bool potion_vie { get; set; } = false;
         public bool potion_mort { get; set; } = false;
         public bool proteger { get; set; } = false;
+        public bool deja_ete_proteger {  get; set; } = false;
 
         public Joueur(string nom)
         {
@@ -113,6 +114,15 @@ namespace Projet_loup_garou
                 role_Sorciere(sorciere);
 
             affichageMort();
+
+            foreach (var joueurPlusProteger in joueurs.Where(j => j.deja_ete_proteger))
+                joueurPlusProteger.deja_ete_proteger = false;
+
+            foreach (var joueurDejaProteger in joueurs.Where(j => j.proteger))
+            {
+                joueurDejaProteger.deja_ete_proteger = true;
+                joueurDejaProteger.proteger = false;
+            }
         }
 
         private void Jour()
@@ -122,9 +132,7 @@ namespace Projet_loup_garou
             // Afficher les joueurs vivants
             Console.WriteLine("Joueurs vivants :");
             foreach (var joueur in joueurs.Where(j => j.Est_Vivant))
-            {
                 Console.WriteLine($"- {joueur.Nom} ({joueur.Role})");
-            }
 
             //  Voter pour éliminer un joueur
             Console.Write("Choisissez un joueur a eliminer : ");
@@ -139,9 +147,7 @@ namespace Projet_loup_garou
                 affichageMort();
             }
             if (victimeJour == null)
-            {
                 Console.WriteLine("Personne n'a été designé par le village.");
-            }
         }
 
         private void role_Cupidon()
@@ -186,7 +192,7 @@ namespace Projet_loup_garou
             Console.WriteLine("Le garde va proteger quelqu'un : ");
             var nomProteger = Console.ReadLine();
             var joueurProteger = joueurs.FirstOrDefault(j => j.Nom.Equals(nomProteger, StringComparison.OrdinalIgnoreCase));
-            if (joueurProteger != null && joueurProteger.Est_Vivant)
+            if (joueurProteger != null && joueurProteger.Est_Vivant && joueurProteger.deja_ete_proteger == false)
                 joueurProteger.proteger = true;
         }
 
@@ -256,7 +262,7 @@ namespace Projet_loup_garou
             {
                 foreach (var joueur in eliminationNuit)
                 {
-                    joueur.Est_Vivant = false; // Marque le joueur comme mort
+                    joueur.Est_Vivant = false;
                     Console.WriteLine($"- {joueur.Nom} a été éliminé cette nuit, il était {joueur.Role}.");
                     // verifier si le joueur mort fait parti du couple
                     if (joueur.Est_amoureux)
@@ -265,7 +271,7 @@ namespace Projet_loup_garou
                         var partenaire = joueurs.FirstOrDefault(j => j.Est_amoureux && j.Est_Vivant && j != joueur);
                         if (partenaire != null)
                         {
-                            partenaire.Est_Vivant = false; // Marque le partenaire comme mort
+                            partenaire.Est_Vivant = false;
                             Console.WriteLine($"- Par chargrin amoureux ,{partenaire.Nom} qui était {partenaire.Role} a décidé de mettre fin à ses jours.");
                         }
                     }
