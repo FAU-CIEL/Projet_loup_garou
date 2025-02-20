@@ -272,7 +272,7 @@ namespace Projet_loup_garou
                         if (partenaire != null)
                         {
                             partenaire.Est_Vivant = false;
-                            Console.WriteLine($"- Par chargrin amoureux ,{partenaire.Nom} qui était {partenaire.Role} a décidé de mettre fin à ses jours.");
+                            Console.WriteLine($"- Par chargrin amoureux , {partenaire.Nom} qui était {partenaire.Role} a décidé de mettre fin à ses jours.");
                         }
                     }
                 }
