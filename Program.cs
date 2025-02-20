@@ -281,8 +281,6 @@ namespace Projet_loup_garou
             {
                 Console.WriteLine("Aucune personne n'a été eliminé cette nuit.");
             }
-            foreach (var joueur in joueurs.Where(j => j.proteger))
-                joueur.proteger = false;
         }
     }
 
