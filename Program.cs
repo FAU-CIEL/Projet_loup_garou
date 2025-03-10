@@ -16,6 +16,7 @@ namespace Projet_loup_garou
         Chasseur,
         Cupidon,
         Garde,
+        joueur_de_flute,
     }
 
     public class Joueur
@@ -29,6 +30,7 @@ namespace Projet_loup_garou
         public bool potion_mort { get; set; } = false;
         public bool proteger { get; set; } = false;
         public bool deja_ete_proteger {  get; set; } = false;
+        public bool infecter { get; set; } = false;
 
         public Joueur(string nom)
         {
@@ -64,6 +66,7 @@ namespace Projet_loup_garou
         {
             var vivants = joueurs.Where(j => j.Est_Vivant).ToList();
             var loupsGarous = vivants.Count(j => j.Role == Role.LoupGarou);
+            var infecter = joueurs.Where(j => j.Est_Vivant && j.infecter).ToList();
 
             if (loupsGarous == vivants.Count) // Reste que des Loups-Garous
             {
@@ -74,6 +77,12 @@ namespace Projet_loup_garou
             else if (loupsGarous == 0) // Reste que les roles du village
             {
                 Console.WriteLine("Les Villageois ont gagné !");
+                Thread.Sleep(1500);
+                return true;
+            }
+            else if (infecter.Count == vivants.Count) // tout les joueurs sont infecter
+            {
+                Console.WriteLine("Le joueur de flute a gagné !");
                 Thread.Sleep(1500);
                 return true;
             }
@@ -100,6 +109,10 @@ namespace Projet_loup_garou
             var voyante = joueurs.FirstOrDefault(j => j.Role == Role.Voyante && j.Est_Vivant);
             if (voyante != null)
                 role_Voyante();
+
+            var joueur_de_flute = joueurs.FirstOrDefault(j => j.Role == Role.joueur_de_flute && j.Est_Vivant);
+            if (joueur_de_flute != null)
+                role_joueur_de_flute();
 
             var garde = joueurs.FirstOrDefault(j => j.Role == Role.Garde && j.Est_Vivant);
             if (garde != null)
@@ -186,6 +199,22 @@ namespace Projet_loup_garou
             var joueurInspecte = joueurs.FirstOrDefault(j => j.Nom.Equals(nomInspecte, StringComparison.OrdinalIgnoreCase));
             if (joueurInspecte != null && joueurInspecte.Est_Vivant)
                 Console.WriteLine($"La voyante a inspecté {joueurInspecte.Nom} et a decouvert qu'il est : {joueurInspecte.Role}.");
+        }
+
+        private void role_joueur_de_flute()
+        {
+            Console.WriteLine("Le joueur de flute va charmer deux joueurs.");
+            Console.WriteLine("Premier joueur a charmer : ");
+            var nominfecter1 = Console.ReadLine();
+            Console.WriteLine("Deuxieme joueur a charmer : ");
+            var nominfecter2 = Console.ReadLine();
+
+            var inpecter1 = joueurs.FirstOrDefault(j => j.Nom.Equals(nominfecter1, StringComparison.OrdinalIgnoreCase) && j.Est_Vivant);
+            var inpecter2 = joueurs.FirstOrDefault(j => j.Nom.Equals(nominfecter2, StringComparison.OrdinalIgnoreCase) && j.Est_Vivant);
+            if (inpecter1 != null)
+                inpecter1.infecter = true;
+            if (inpecter2 != null)
+                inpecter2.infecter = true;
         }
 
         private void role_Garde()
@@ -314,6 +343,7 @@ namespace Projet_loup_garou
                 Role.Garde,
                 Role.Sorciere,
                 Role.Chasseur,
+                Role.joueur_de_flute,
             };
 
             // Calcule le nombre de villagois et de loup-garous
