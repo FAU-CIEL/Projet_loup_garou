@@ -66,7 +66,7 @@ namespace Projet_loup_garou
         {
             var vivants = joueurs.Where(j => j.Est_Vivant).ToList();
             var loupsGarous = vivants.Count(j => j.Role == Role.LoupGarou);
-            var infecter = joueurs.Where(j => j.Est_Vivant && j.infecter).ToList();
+            var infecter = joueurs.Where(j => j.Est_Vivant && j.infecter && j.Role != Role.joueur_de_flute).ToList();
 
             if (loupsGarous == vivants.Count) // Reste que des Loups-Garous
             {
@@ -80,7 +80,7 @@ namespace Projet_loup_garou
                 Thread.Sleep(1500);
                 return true;
             }
-            else if (infecter.Count == vivants.Count) // tout les joueurs sont infecter
+            else if (infecter.Count == vivants.Count - 1) // tout les joueurs sont infecter
             {
                 Console.WriteLine("Le joueur de flute a gagné !");
                 Thread.Sleep(1500);
